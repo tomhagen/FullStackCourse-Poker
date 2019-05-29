@@ -1,0 +1,48 @@
+﻿Mô tả dự án: 
+Project đánh bài cào 3 lá, người nào được nhiều điểm nhất người đó thắng mỗi ván.
+Tổng kết 5 ván ai có điểm cao nhất người đó win chung cuộc.
+
+Chức năng dự án:
+- Cho phép người dùng đăng ký & đăng nhập tài khoản ( đăng ký tài khoản theo API của cybersoft )
+- Khi đã đăng nhập thì mới vào được màn hình chơi Game.
+- Màn hình chơi game có 4 người chơi ( 1 người đăng nhập vào & 3 người máy chơi ).
+- Có 3 nút: Xào bài, chia bài & lật bài. Bộ bài 52 lá lấy từ API có sẵn, chia bài và xáo bài lấy từ API luôn. 
+- Nhấn nút chia bài thì mỗi người được 3 lá bài, sau khi chia nhấn nút lật bài thì tất cả bài mở. 
+Sau đó máy tự tổng kết điểm và cộng vào cho người chơi. Hết 5 ván thông báo người thắng cuộc và chơi lại từ đầu.
+
+
+Logic dự án:
+- Tạo màn hình Home với nút vào trang Game & màn hình đăng ký, đăng nhập. Header có nút đăng ký, đăng nhập.
+- Dùng BrowserRouter & Route để tạo path cho các màn hình.
+- Tại màn hình Đăng ký xử lý form và gửi lên server một user mới với format server Cybersoft quy định ( dùng API của Cybersoft để Thêm người dùng ).
+Khi đăng ký xong thì chuyển về trang đăng nhập.
+- Tại màn hình đăng nhập xử lý form và dispatch lên server một requestLoginUser ( gửi kèm theo Tài Khoản, Mật Khẩu & callback push về trang Home ).
+- Khởi tạo redux & redux thunk. 
+- Tại action viết 2 action : 
+	1. actUserLogin để gửi user sau khi server trả về lên store.
+	2. requestUserLogin để xử lý Axios , kiểm tra kết quả trả về và lưu vào localStorage.Sau đó dispatch actUserLogin lên lưu vào store. Rồi cho chạy hàm callback để chuyển về trang Home.
+Tại header lên store lấy user và hiển thị ra màn hình Home Xin chào... tên người chơi.
+- Tạo loginGuard bảo vệ 2 route Home & Game. Đăng nhập thành công chuyển về trang Home, nhấn nút Play Game để vào trang Game.
+
+- Tạo mảng 4 object player trong reducer ( trong đó có 1 object có username = Tài Khoản lấy từ localStorage ).
+- Tạo các component Card, Player & Control.
+- Player render ra từ playerList lấy từ store & trong mỗi thằng Player được render ra: truyền username cho nó & render card từ mảng card trong player. 
+- Tại màn hình main dispatch fetchCard để lấy bộ bài. ( sử dụng React Hook: useEffect như componentDidMount để chứa props chạy ). 
+- Tại action Card viết 2 action:
+	1. actSaveCard để gửi card server trả về lên store
+	2. fetchCard để xử lý Axios lấy bộ bài về, nếu thành công thì dispatch actSaveCard lưu vào store.
+
+- Tại control xử lý nút Shuffle xào bài, khi nhấn nút xào thì dispatch một hàm shuffleDeck gửi kèm theo id của bộ bài. 
+- Tại action card viết action shuffleDeck xử lý Axios lấy bộ bài đã xào, thành công thì lưu vào store qua actSaveCard.
+- Tại control xử lý nút Draw chia bài, khi nhấn nút chia thì dispatch một hàm drawDeck gửi kèm id của bộ bài 
+- Tại action Card viết 2 action:
+	1. actDrawCard để lưu 12 lá bài server trả về lên store
+	2. drawDeck để xử lý Axios lấy 12 lá bài, thành công thì dispatch actDrawCard để lưu 12 lá lên store.
+
+- Tại reducers xử lý action DRAW_CARD: duyệt mảng 12 card gửi trong action, push thằng action.cards vào mảng card đã khởi tạo ban đầu => lúc này giao diện đã render ra mỗi thằng 3 lá
+- Dùng biến status để xử lý khi nhấn nút RevealCard để xem người chơi muốn lật bài hay chưa.
+
+TÍNH ĐIỂM:
+
+
+
